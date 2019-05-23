@@ -1,5 +1,19 @@
 # bit-shift-cipher
 
+bit-shift vernam cipher
+
+the cipher cannot be cracked assuming the following:
+* The key is used only once
+* The key is not in anyway compromised
+
+the following would not be advisable:
+* sending the ciphertext and key together over the same
+  encrypted/unencrypted connection.
+* encrypting the key with another encryption algorithm
+  and sending the ciphertext and key together over the same
+  encrypted/unencrypted connection.
+
+
 demo: https://angeal185.github.io/bit-shift-cipher/
 
 ### Installation
