@@ -48,9 +48,12 @@ $ git clone git@github.com:angeal185/bit-shift-cipher.git
 ```js
 //default options
 {
-  min: 0, //min shift
-  max: 255, //max shift
-  out: 'string' //default decrypt encoding string/array/uint8
+  min: 0, // {integer} min shift
+  max: 255, // {integer} max shift
+  out: 'string', // {string/array/uint8} ~ default decrypt encoding string/array/uint8
+  padding: [2,2], // {array/boolean} ~ prepend/append random padding. false to disable
+  reverse: false, // reverse ciphertext
+  iterations: 0 // rounds for ciphertext encrypt/decrypt (0-255)
 }
 
 

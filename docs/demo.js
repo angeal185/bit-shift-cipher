@@ -1,7 +1,8 @@
 const conf = {
   min: 0,
   max: 255,
-  out: 'string'
+  out: 'string',
+  padding: [2,4]
 },
 bsc = new bitShift(conf),
 utils = bsc.utils,
@@ -37,9 +38,10 @@ function test(type, a, b){
   cl(Digest + ' test starting...');
   let sync = bsc.encSync(text, Digest);
   sync = bsc.decSync(sync.ctext, sync.key, Digest);
-  test('sync', sync, text);
+  //test('sync', sync, text);
   cl(sync)
 
+/*
   //callback
   bsc.enc(text, Digest,function(err, res){
     if(err){return ce(err)}
@@ -81,7 +83,7 @@ function test(type, a, b){
     ce(err)
   })
 
-
+*/
 
 // enc/dec hmac test
 /*
@@ -116,6 +118,8 @@ bsc.hmac.gen(Hash, Digest, function(err, key){
 })
 */
 
+
+/*
 //hmac promise
 bsc.hmac.genP(Hash, Digest)
 .then(function(key){
@@ -134,7 +138,7 @@ bsc.hmac.genP(Hash, Digest)
 }).catch(function(err){
   ce(err)
 })
-
+*/
 
 
 

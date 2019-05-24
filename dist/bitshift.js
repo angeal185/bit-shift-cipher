@@ -6,7 +6,10 @@ function bitShift(conf){
   const def = {
     min: 0,
     max: 255,
-    out: 'string'
+    out: 'string',
+    padding: false,
+    reverse: false,
+    iterations: 1
   }
   if(!conf){
     conf = def;
@@ -15,6 +18,9 @@ function bitShift(conf){
   const MIN = conf.min || def.min,
   MAX = conf.max || def.max,
   OUT = conf.out || def.out;
+  PAD = conf.padding || def.padding;
+  REV = conf.reverse || def.reverse;
+  ITER = conf.iterations || def.iterations
 
   const utils = {
     bin2int : s => parseInt(s, 2),
@@ -119,6 +125,15 @@ function bitShift(conf){
         return true
       }
       return false
+    },
+    padIt: function(src, i){
+      let x = utils.randomBytes(src.length + i[0] + i[1])
+      x.set(src, i[0])
+      return x;
+    },
+    unPad: function(src, i){
+      src = src.slice(i[0],-i[1])
+      return src;
     }
   };
 
@@ -286,6 +301,20 @@ function bitShift(conf){
       ctext[i] = utils.sup(plain[i], key[i]);
     }
 
+    for (let x = 0; x < ITER; x++) {
+      for (let i = 0; i < pl; i++) {
+        ctext[i] = utils.sup(ctext[i], key[i]);
+      }
+    }
+
+    if(REV){
+      ctext = ctext.reverse();
+    }
+
+    if(PAD && utils.isArray(PAD) && PAD.length >= 2){
+      ctext = utils.padIt(ctext, PAD)
+    }
+
     return {
       ctext: checkKey(digest, ctext, true),
       key: checkKey(digest, key, true)
@@ -297,12 +326,27 @@ function bitShift(conf){
     ctext = checkKey(digest, ctext, false),
     key = checkKey(digest, key, false)
 
-    let plain = ctext.subarray();
+    //remove padding
+    if(PAD && utils.isArray(PAD) && PAD.length >= 2){
+      ctext = utils.unPad(ctext, PAD)
+    }
 
+    if(REV){
+      ctext = ctext.reverse();
+    }
+
+    let plain = ctext.subarray();
 
     for (let i = 0; i < ctext.length; i++) {
       plain[i] = utils.sdown(ctext[i], key[i]);
     }
+
+    for (let x = 0; x < ITER; x++) {
+      for (let i = 0; i < ctext.length; i++) {
+        plain[i] = utils.sdown(plain[i], key[i]);
+      }
+    }
+
     if(OUT === 'string'){
       return utils.u82s(plain);
     } else if(OUT === 'array'){
