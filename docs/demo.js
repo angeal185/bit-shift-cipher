@@ -179,7 +179,6 @@ bsc.ecdsa.gen('521', function(err, ekey){
 
 
 // enc/dec ecdsa test
-
 bsc.ecdsa.gen(Curve, function(err, ekey){
 
    //cl(ekey)

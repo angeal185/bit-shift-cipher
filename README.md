@@ -263,6 +263,73 @@ bsc.hmac.verify(key, ctext, sig, hash, digest, cb)
 bsc.hmac.verifyP(key, ctext, sig, hash, digest)
 
 
+/* ecdsa */
+
+/**
+ *  callback ~ generate ecdsa keypair
+ *  @param {string} curve ~ ecdsa curve '256'/'384'/'521'
+ *  @param {function} cb ~ callback function(err,data)
+ **/
+
+bsc.ecdsa.gen(curve, cb)
+
+
+/**
+ *  promise ~ generate ecdsa keypair
+ *  @param {string} curve ~ ecdsa curve '256'/'384'/'521'
+ **/
+
+bsc.ecdsa.genP(curve)
+
+
+/**
+ *  callback ~ sign encrypted data
+ *  @param {string/byteArray/uint8Array} key ~ ecdsa key (jwk)
+ *  @param {string/byteArray/uint8Array} ctext ~ encrypted data
+ *  @param {string} hash ~ ecdsa hash 256/384/512
+ *  @param {string} digest ~ ecdsa sig digest hex/bytes/binary/uint8/base64
+ *  @param {function} cb ~ callback function(err,data)
+ **/
+
+bsc.ecdsa.sign(key, ctext, hash, digest, cb)
+
+
+/**
+ *  promise ~ sign encrypted data
+ *  @param {string/byteArray/uint8Array} key ~ ecdsa key (jwk)
+ *  @param {string/byteArray/uint8Array} ctext ~ encrypted data
+ *  @param {string} hash ~ ecdsa hash 256/384/512
+ *  @param {string} digest ~ ecdsa sig digest hex/bytes/binary/uint8/base64
+ **/
+
+bsc.ecdsa.signP(key, ctext, hash, digest)
+
+
+/**
+ *  callback ~ verify signature
+ *  @param {string/byteArray/uint8Array} key ~ ecdsa key (jwk)
+ *  @param {string/byteArray/uint8Array} sig ~ ecdsa signature
+ *  @param {string/byteArray/uint8Array} ctext ~ encrypted data
+ *  @param {string} hash ~ ecdsa hash 256/384/512
+ *  @param {string} digest ~ ecdsa sig digest hex/bytes/binary/uint8/base64
+ *  @param {function} cb ~ callback function(err,data)
+ **/
+
+bsc.ecdsa.verify(key, sig, ctext, hash, digest, cb)
+
+
+/**
+ *  promise ~ verify encrypted data
+ *  @param {string/byteArray/uint8Array} key ~ ecdsa key (jwk)
+ *  @param {string/byteArray/uint8Array} sig ~ ecdsa signature
+ *  @param {string/byteArray/uint8Array} ctext ~ encrypted data
+ *  @param {string} hash ~ ecdsa hash 256/384/512
+ *  @param {string} digest ~ ecdsa sig digest hex/bytes/binary/uint8/base64
+ **/
+
+bsc.ecdsa.verifyP(key, sig, ctext, hash, digest)
+
+
 /* utils */
 
 bsc.utils.u82s(Uint8Array) // Uint8Array to string

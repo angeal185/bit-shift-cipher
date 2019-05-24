@@ -636,5 +636,4 @@ function bitShift(conf){
     hmac:hmac,
     ecdsa: ecdsa
   }
-
 }
