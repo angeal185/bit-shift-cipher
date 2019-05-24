@@ -1,4 +1,4 @@
-const conf = {
+Curveconst conf = {
   min: 0,
   max: 255,
   out: 'string',
@@ -8,6 +8,7 @@ bsc = new bitShift(conf),
 utils = bsc.utils,
 Digest = 'uint8',
 Hash = '256',
+Curve = '521',
 cl = console.log,
 ce = console.error;
 
@@ -179,7 +180,7 @@ bsc.ecdsa.gen('521', function(err, ekey){
 
 // enc/dec ecdsa test
 
-bsc.ecdsa.gen('521', function(err, ekey){
+bsc.ecdsa.gen(Curve, function(err, ekey){
 
    //cl(ekey)
 
@@ -194,7 +195,7 @@ bsc.ecdsa.gen('521', function(err, ekey){
 })
 
 //ecdsa promise
-bsc.ecdsa.genP('521')
+bsc.ecdsa.genP(Curve)
 .then(function(ekey){
   bsc.ecdsa.signP(ekey.private, text, Hash, Digest)
   .then(function(sig){
@@ -213,7 +214,7 @@ bsc.ecdsa.genP('521')
 
 
 // ecdsa jwk gen promise
-bsc.ecdsa.genP('521')
+bsc.ecdsa.genP(Curve)
 .then(function(ekey){
   // sign data
   bsc.ecdsa.signP(ekey.private, text, Hash, Digest)
