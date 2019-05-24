@@ -195,6 +195,63 @@ bsc.decHmacP(ctext, key, hmac, hkey, hash, digest)
 
 
 
+/* encrypt and sign with ecdsa */
+
+/**
+ *  callback ~  encrypt and sign
+ *  @param {string/byteArray/uint8Array} plain ~ data to encrypt
+ *  @param {object} ekey ~ ecdsa key (private jwk)
+ *  @param {string} hash ~ ecdsa hash 256/384/512
+ *  @param {string} digest ~ ecdsa/data digest hex/bytes/binary/uint8/base64
+ *  @param {function} cb ~ callback function(err,data)
+ **/
+
+bsc.encEcdsa(plain, ekey, hash, digest, cb)
+
+
+/**
+ *  promise ~  encrypt and sign
+ *  @param {string/byteArray/uint8Array} plain ~ data to encrypt
+ *  @param {object} ekey ~ ecdsa key (private jwk)
+ *  @param {string} hash ~ ecdsa hash 256/384/512
+ *  @param {string} digest ~ ecdsa/data digest hex/bytes/binary/uint8/base64
+ **/
+
+bsc.encEcdsaP(plain, ekey, hash, digest)
+
+
+
+/* verify ecdsa and decrypt */
+
+
+/**
+ *  callback ~  verify and decrypt
+ *  @param {string/byteArray/uint8Array} ctext ~ data to decrypt
+ *  @param {string/byteArray/uint8Array} key ~ decrypt key
+ *  @param {string/byteArray/uint8Array} sig ~ ecdsa signature
+ *  @param {object} ekey ~ ecdsa key (public jwk)
+ *  @param {string} hash ~ ecdsa hash 256/384/512
+ *  @param {string} digest ~ ecdsa/data digest hex/bytes/binary/uint8/base64
+ *  @param {function} cb ~ callback function(err,data)
+ **/
+
+bsc.decEcdsa(ctext, key, sig, ekey, hash, digest, cb)
+
+
+/**
+ *  promise ~  verify and decrypt
+ *  @param {string/byteArray/uint8Array} ctext ~ data to decrypt
+ *  @param {string/byteArray/uint8Array} key ~ decrypt key
+ *  @param {string/byteArray/uint8Array} sig ~ ecdsa signature
+ *  @param {object} ekey ~ ecdsa key (public jwk)
+ *  @param {string} hash ~ ecdsa hash 256/384/512
+ *  @param {string} digest ~ ecdsa/data digest hex/bytes/binary/uint8/base64
+ **/
+
+bsc.decEcdsaP(ctext, key, sig, ekey, hash, digest)
+
+
+
 /* hmac */
 
 /**
@@ -284,7 +341,7 @@ bsc.ecdsa.genP(curve)
 
 /**
  *  callback ~ sign encrypted data
- *  @param {string/byteArray/uint8Array} key ~ ecdsa key (jwk)
+ *  @param {object} key ~ ecdsa key (jwk)
  *  @param {string/byteArray/uint8Array} ctext ~ encrypted data
  *  @param {string} hash ~ ecdsa hash 256/384/512
  *  @param {string} digest ~ ecdsa sig digest hex/bytes/binary/uint8/base64
@@ -296,7 +353,7 @@ bsc.ecdsa.sign(key, ctext, hash, digest, cb)
 
 /**
  *  promise ~ sign encrypted data
- *  @param {string/byteArray/uint8Array} key ~ ecdsa key (jwk)
+ *  @param {object} key ~ ecdsa key (jwk)
  *  @param {string/byteArray/uint8Array} ctext ~ encrypted data
  *  @param {string} hash ~ ecdsa hash 256/384/512
  *  @param {string} digest ~ ecdsa sig digest hex/bytes/binary/uint8/base64
@@ -307,7 +364,7 @@ bsc.ecdsa.signP(key, ctext, hash, digest)
 
 /**
  *  callback ~ verify signature
- *  @param {string/byteArray/uint8Array} key ~ ecdsa key (jwk)
+ *  @param {object} key ~ ecdsa key (jwk)
  *  @param {string/byteArray/uint8Array} sig ~ ecdsa signature
  *  @param {string/byteArray/uint8Array} ctext ~ encrypted data
  *  @param {string} hash ~ ecdsa hash 256/384/512
@@ -319,8 +376,8 @@ bsc.ecdsa.verify(key, sig, ctext, hash, digest, cb)
 
 
 /**
- *  promise ~ verify encrypted data
- *  @param {string/byteArray/uint8Array} key ~ ecdsa key (jwk)
+ *  promise ~ verify signature
+ *  @param {object} key ~ ecdsa key (jwk)
  *  @param {string/byteArray/uint8Array} sig ~ ecdsa signature
  *  @param {string/byteArray/uint8Array} ctext ~ encrypted data
  *  @param {string} hash ~ ecdsa hash 256/384/512
