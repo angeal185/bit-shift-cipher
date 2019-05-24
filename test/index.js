@@ -36,14 +36,14 @@ function test(type, a, b){
   }
 }
 
-/*
+
   cl(Digest + ' test starting...');
   let sync = bsc.encSync(text, Digest);
   sync = bsc.decSync(sync.ctext, sync.key, Digest);
   //test('sync', sync, text);
   cl(sync)
 
-*/
+
   //callback
   bsc.enc(text, Digest,function(err, res){
     if(err){return ce(err)}
@@ -105,7 +105,7 @@ bsc.hmac.gen(Hash, Digest, function(err, hkey){
 
 
 //hmac callback
-/*
+
 bsc.hmac.gen(Hash, Digest, function(err, key){
   if(err){return ce(err)}
   cl(key)
@@ -118,10 +118,10 @@ bsc.hmac.gen(Hash, Digest, function(err, key){
     })
   })
 })
-*/
 
 
-/*
+
+
 //hmac promise
 bsc.hmac.genP(Hash, Digest)
 .then(function(key){
@@ -140,13 +140,13 @@ bsc.hmac.genP(Hash, Digest)
 }).catch(function(err){
   ce(err)
 })
-*/
+
 
 
 
 
 // enc/dec hmac promise test
-/*
+
 bsc.hmac.gen(Hash, Digest, function(err, hkey){
 
   // cl(hkey)
@@ -163,4 +163,3 @@ bsc.hmac.gen(Hash, Digest, function(err, hkey){
     ce(err)
   })
 })
-*/

@@ -39,7 +39,7 @@ function test(type, a, b){
   //test('sync', sync, text);
   cl(sync)
 
-/*
+
   //callback
   bsc.enc(text, Digest,function(err, res){
     if(err){return ce(err)}
@@ -81,10 +81,10 @@ function test(type, a, b){
     ce(err)
   })
 
-*/
+
 
 // enc/dec hmac test
-/*
+
 bsc.hmac.gen(Hash, Digest, function(err, hkey){
 
   // cl(hkey)
@@ -98,10 +98,9 @@ bsc.hmac.gen(Hash, Digest, function(err, hkey){
     });
   });
 })
-*/
 
 //hmac callback
-/*
+
 bsc.hmac.gen(Hash, Digest, function(err, key){
   if(err){return ce(err)}
   cl(key)
@@ -114,10 +113,8 @@ bsc.hmac.gen(Hash, Digest, function(err, key){
     })
   })
 })
-*/
 
 
-/*
 //hmac promise
 bsc.hmac.genP(Hash, Digest)
 .then(function(key){
@@ -136,13 +133,9 @@ bsc.hmac.genP(Hash, Digest)
 }).catch(function(err){
   ce(err)
 })
-*/
-
-
-
 
 // enc/dec hmac promise test
-/*
+
 bsc.hmac.gen(Hash, Digest, function(err, hkey){
 
   // cl(hkey)
@@ -159,4 +152,3 @@ bsc.hmac.gen(Hash, Digest, function(err, hkey){
     ce(err)
   })
 })
-*/
