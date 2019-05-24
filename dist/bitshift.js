@@ -286,6 +286,117 @@ function bitShift(conf){
     }
   }
 
+  const ecdsa = {
+    gen: function(curve, cb){
+      wcs.generateKey({name: "ECDSA", namedCurve: 'P-' + curve}, true, ["sign", "verify"])
+      .then(function(key){
+        let obj = {};
+        //public
+        wcs.exportKey("jwk", key.publicKey)
+        .then(function(kd){
+          obj.public = kd
+
+          wcs.exportKey("jwk", key.privateKey)
+            .then(function(kd){
+              obj.private = kd;
+                cb(false,obj)
+            })
+            .catch(function(err){
+              cb(err);
+            });
+        })
+        .catch(function(err){
+          cb(err);
+        });
+
+      })
+      .catch(function(err){
+          cb(err);
+      });
+    },
+    genP: function(curve){
+      return new Promise(function(resolve, reject){
+        ecdsa.gen(curve, function(err, key){
+          if(err){return reject(err)}
+          resolve(key);
+        })
+      })
+    },
+    sign: function(key, data, hash, digest, cb){
+      wcs.importKey("jwk",
+        key,{
+          name: "ECDSA",
+          namedCurve: key.crv
+        }, true, ["sign"]
+      )
+      .then(function(i){
+        if(utils.isArray(data)){
+          data = Uint8Array.from(data)
+        }
+        if(!utils.isUint8(data)){
+          data = utils.s2u8(data)
+        }
+        wcs.sign({name: "ECDSA", hash: {name: "SHA-" + hash}}, i, data)
+        .then(function(signature){
+          let sig = checkKey(digest, new Uint8Array(signature), true);
+          cb(false,sig);
+        })
+        .catch(function(err){
+          cb(err);
+        });
+      })
+      .catch(function(err){
+        cb(err);
+      });
+
+    },
+    signP: function(key, data, hash, digest){
+      return new Promise(function(resolve, reject){
+        ecdsa.sign(key, data, hash, digest, function(err, sig){
+          if(err){return reject(err)}
+          resolve(sig);
+        })
+      })
+    },
+    verify: function(key, sig, data, hash, digest, cb){
+      wcs.importKey("jwk",
+        key,{
+          name: "ECDSA",
+          namedCurve: key.crv
+        }, true, ["verify"]
+      ).then(function(i){
+        if(utils.isArray(data)){
+          data = Uint8Array.from(data)
+        }
+        if(!utils.isUint8(data)){
+          data = utils.s2u8(data)
+        }
+        wcs.verify({name: "ECDSA", hash: {name: "SHA-"+ hash}},
+            i,
+            checkKey(digest, sig, false),
+            data
+        )
+        .then(function(isvalid){
+            cb(false, isvalid)
+        })
+        .catch(function(err){
+            cb(err);
+        });
+      })
+      .catch(function(err){
+          cb(err);
+      });
+    },
+    verifyP: function(key, sig, data, hash, digest, cb){
+      return new Promise(function(resolve, reject){
+        ecdsa.verify(key, sig, data, hash, digest, function(err, isEqual){
+          if(err){return reject(err)}
+          resolve(isEqual);
+        })
+      })
+    }
+  }
+
   // encrypt
   function enc(plain, digest) {
 
@@ -381,8 +492,21 @@ function bitShift(conf){
       try {
         const data = enc(plain, digest)
         hmac.sign(hkey, data.ctext, hash, digest, function(err, sig){
-          if(err){return ce(err)}
+          if(err){return cb(err)}
           data.hmac = sig;
+          cb(false, data)
+        })
+        return;
+      } catch (err) {
+        cb('bit-shift encrypt error', null)
+      }
+    },
+    encEcdsa: function(plain, ekey, hash, digest, cb){
+      try {
+        const data = enc(plain, digest)
+        ecdsa.sign(ekey, data.ctext, hash, digest, function(err, sig){
+          if(err){return cb(err)}
+          data.sig = sig;
           cb(false, data)
         })
         return;
@@ -400,6 +524,22 @@ function bitShift(conf){
             return;
           } else {
             cb('bit-shift hmac authentication failure', null)
+          }
+        })
+      } catch (err) {
+        cb('bit-shift decrypt error', null)
+      }
+    },
+    decEcdsa: function(ctext, key, sig, ekey, hash, digest, cb){
+      try {
+        ecdsa.verify(ekey, sig, ctext, hash, digest, function(err, isEqual){
+          if(err){return cb(err, null)}
+          if(isEqual){
+            const plain = dec(ctext, key, digest);
+            cb(false, plain)
+            return;
+          } else {
+            cb('bit-shift ecdsa authentication failure', null)
           }
         })
       } catch (err) {
@@ -459,8 +599,42 @@ function bitShift(conf){
         }
       })
     },
+    encEcdsaP: function(plain, ekey, hash, digest){
+      return new Promise(function(resolve, reject){
+        try {
+          const data = enc(plain, digest)
+          ecdsa.sign(ekey, data.ctext, hash, digest, function(err, sig){
+            if(err){return reject(err)}
+            data.sig = sig;
+            resolve(data)
+          })
+          return;
+        } catch (err) {
+          reject('bit-shift encrypt ecdsa error');
+        }
+      })
+    },
+    decEcdsaP: function(ctext, key, sig, ekey, hash, digest){
+      return new Promise(function(resolve, reject){
+        try {
+          ecdsa.verify(ekey, sig, ctext, hash, digest, function(err, isEqual){
+            if(err){return reject(err)}
+            if(isEqual){
+              const plain = dec(ctext, key, digest);
+              resolve(plain)
+              return;
+            } else {
+              reject('bit-shift ecdsa authentication failure')
+            }
+          })
+        } catch (err) {
+          reject('bit-shift decrypt error');
+        }
+      })
+    },
     utils: utils,
-    hmac:hmac
+    hmac:hmac,
+    ecdsa: ecdsa
   }
 
 }

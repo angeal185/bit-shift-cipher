@@ -396,4 +396,74 @@ bsc.hmac.genP(Hash, Digest)
   ce(err)
 })
 
+
+
+
+// ecdsa jwk gen callback
+bsc.ecdsa.gen('521', function(err, ekey){
+  // sign data
+  bsc.ecdsa.sign(ekey.private, text, Hash, Digest, function(err, sig){
+    if(err){return ce(err)}
+    // verify data
+    bsc.ecdsa.verify(ekey.public, sig, text, Hash, Digest, function(err, isEqual){
+      if(err){return ce(err)}
+      cl(isEqual)
+    })
+  })
+})
+
+// ecdsa jwk gen promise
+bsc.ecdsa.genP('521')
+.then(function(ekey){
+  // sign data
+  bsc.ecdsa.signP(ekey.private, text, Hash, Digest)
+  .then(function(sig){
+    // verify data
+    bsc.ecdsa.verifyP(ekey.public, sig, text, Hash, Digest)
+    .then(function(isEqual){
+      cl(isEqual)
+    }).catch(function(err){
+      ce(err)
+    })
+  }).catch(function(err){
+    ce(err)
+  })
+}).catch(function(err){
+  ce(err)
+})
+
+// enc/dec with ecdsa callback
+bsc.ecdsa.gen('521', function(err, ekey){
+  // encrypt and sign data
+  bsc.encEcdsa(text, ekey.private, Hash, Digest, function(err, res){
+    if(err){return ce(err)}
+    // verify and decrypt data
+    bsc.decEcdsa(res.ctext, res.key, res.sig, ekey.public, Hash, Digest, function(err, dec){
+      if(err){return ce(err)}
+      cl(dec)
+    });
+  });
+})
+
+
+// enc/dec with ecdsa promise
+bsc.ecdsa.genP('521')
+.then(function(ekey){
+  // encrypt and sign data
+  bsc.encEcdsaP(text, ekey.private, Hash, Digest)
+  .then(function(res){
+    // verify and decrypt data
+    bsc.decEcdsaP(res.ctext, res.key, res.sig, ekey.public, Hash, Digest)
+    .then(function(dec){
+      cl(dec)
+    }).catch(function(err){
+      ce(err)
+    })
+  }).catch(function(err){
+    ce(err)
+  })
+}).catch(function(err){
+  ce(err)
+})
+
 ```
