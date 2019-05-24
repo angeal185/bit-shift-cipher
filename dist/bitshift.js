@@ -5,9 +5,9 @@ function bitShift(conf){
     min: 0,
     max: 255,
     out: 'string',
-    padding: false,
+    padding: [2,2],
     reverse: false,
-    iterations: 1
+    iterations: 0
   }
   if(!conf){
     conf = def;
@@ -23,7 +23,7 @@ function bitShift(conf){
 
   const wc = window.crypto,
   wcs = wc.subtle
-  
+
   const utils = {
     bin2int : s => parseInt(s, 2),
     dec2bin : s => parseInt(s, 10).toString(2),
