@@ -419,8 +419,15 @@ bsc = new bitShift(conf),
 utils = bsc.utils,
 Digest = 'hex',
 Hash = '256',
+Curve = '521',
 cl = console.log,
 ce = console.error;
+
+
+// enc/dec sync
+let sync = bsc.encSync(text, Digest);
+sync = bsc.decSync(sync.ctext, sync.key, Digest);
+cl(sync);
 
 
 // enc/dec callback
@@ -524,7 +531,7 @@ bsc.hmac.genP(Hash, Digest)
 
 
 // ecdsa jwk gen callback
-bsc.ecdsa.gen('521', function(err, ekey){
+bsc.ecdsa.gen(Curve, function(err, ekey){
   // sign data
   bsc.ecdsa.sign(ekey.private, text, Hash, Digest, function(err, sig){
     if(err){return ce(err)}
@@ -537,7 +544,7 @@ bsc.ecdsa.gen('521', function(err, ekey){
 })
 
 // ecdsa jwk gen promise
-bsc.ecdsa.genP('521')
+bsc.ecdsa.genP(Curve)
 .then(function(ekey){
   // sign data
   bsc.ecdsa.signP(ekey.private, text, Hash, Digest)
@@ -557,7 +564,7 @@ bsc.ecdsa.genP('521')
 })
 
 // enc/dec with ecdsa callback
-bsc.ecdsa.gen('521', function(err, ekey){
+bsc.ecdsa.gen(Curve, function(err, ekey){
   // encrypt and sign data
   bsc.encEcdsa(text, ekey.private, Hash, Digest, function(err, res){
     if(err){return ce(err)}
@@ -571,7 +578,7 @@ bsc.ecdsa.gen('521', function(err, ekey){
 
 
 // enc/dec with ecdsa promise
-bsc.ecdsa.genP('521')
+bsc.ecdsa.genP(Curve)
 .then(function(ekey){
   // encrypt and sign data
   bsc.encEcdsaP(text, ekey.private, Hash, Digest)
