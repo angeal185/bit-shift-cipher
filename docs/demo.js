@@ -6,11 +6,10 @@ const conf = {
 },
 bsc = new bitShift(conf),
 utils = bsc.utils,
-Digest = 'bytes',
+Digest = 'base64',
 Hash = '256',
 cl = console.log,
 ce = console.error;
-
 
 let dtype = [
   'hex',
@@ -21,7 +20,6 @@ let dtype = [
 ];
 
 let text = 'abcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()-=_+';
-
 
 function test(type, a, b){
   //test string as input

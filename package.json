@@ -1,0 +1,34 @@
+{
+  "name": "bit-shift-cipher",
+  "version": "1.0.0",
+  "description": "bit-shift vernam cipher for nodejs and the browser",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angeal185/bit-shift-cipher.git"
+  },
+  "keywords": [
+    "cipher",
+    "vernam-cipher",
+    "encryption",
+    "decryption",
+    "algorithm"
+  ],
+  "author": "ben eaves",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/angeal185/bit-shift-cipher/issues"
+  },
+  "homepage": "https://github.com/angeal185/bit-shift-cipher#readme",
+  "dependencies": {
+    "node-webcrypto-ossl": "^1.0.45"
+  }
+}

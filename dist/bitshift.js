@@ -1,7 +1,5 @@
 
 function bitShift(conf){
-  const wc = window.crypto,
-  wcs = window.crypto.subtle;
 
   const def = {
     min: 0,
@@ -20,8 +18,12 @@ function bitShift(conf){
   OUT = conf.out || def.out;
   PAD = conf.padding || def.padding;
   REV = conf.reverse || def.reverse;
-  ITER = conf.iterations || def.iterations
+  ITER = conf.iterations || def.iterations;
 
+
+  const wc = window.crypto,
+  wcs = wc.subtle
+  
   const utils = {
     bin2int : s => parseInt(s, 2),
     dec2bin : s => parseInt(s, 10).toString(2),

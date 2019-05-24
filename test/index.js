@@ -1,48 +1,70 @@
+const bitShift = require('../');
+
 const conf = {
   min: 0,
-  max: 255
+  max: 255,
+  out: 'string',
+  padding: [2,4]
 },
-bsc = new bitShift(),
+bsc = new bitShift(conf),
 utils = bsc.utils,
+Digest = 'base64',
+Hash = '256',
 cl = console.log,
 ce = console.error;
 
+
+let dtype = [
+  'hex',
+  'binary',
+  'uint8',
+  'base64',
+  'bytes'
+];
+
+let text = 'abcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()-=_+';
+
+
 function test(type, a, b){
-  if(utils.isEqual(a,b)){
-    cl(type + ' test pass')
-  } else{
-    ce(type + ' test fail')
+  //test string as input
+  if(conf.out === 'string'){
+    if(utils.isEqual(a,b)){
+      cl(type + ' test pass')
+    } else{
+      ce(type + ' test fail')
+    }
   }
 }
 
-function initTest(digest){
+/*
+  cl(Digest + ' test starting...');
+  let sync = bsc.encSync(text, Digest);
+  sync = bsc.decSync(sync.ctext, sync.key, Digest);
+  //test('sync', sync, text);
+  cl(sync)
 
-  const text = 'abcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()-=_+';
-  cl(digest + ' test starting...');
-  let sync = bsc.encSync(text, digest);
-  sync = bsc.decSync(sync.ctext, sync.key, digest);
-  test('sync', sync, text);
-
+*/
   //callback
-  bsc.enc(text, digest,function(err, res){
+  bsc.enc(text, Digest,function(err, res){
     if(err){return ce(err)}
+    cl(res)
 
 
     //hmac
-    bsc.hmac.gen('256', digest, function(err, key){
+    bsc.hmac.gen(Hash, Digest, function(err, key){
       if(err){return ce(err)}
 
-      bsc.hmac.sign(key, res.ctext, '256', digest, function(err, sig){
+      bsc.hmac.sign(key, res.ctext, Hash, Digest, function(err, sig){
         if(err){return ce(err)}
 
-        bsc.hmac.verify(key, res.ctext, sig, '256', digest, function(err, isEqual){
+        bsc.hmac.verify(key, res.ctext, sig, Hash, Digest, function(err, isEqual){
           if(err){return ce(err)}
           test('hamc', isEqual, true);
         })
       })
     })
 
-    bsc.dec(res.ctext, res.key, digest, function(err, dec){
+    bsc.dec(res.ctext, res.key, Digest, function(err, dec){
       if(err){return ce(err)}
       test('callback', dec, text)
     });
@@ -50,11 +72,11 @@ function initTest(digest){
   });
 
   //promise
-  bsc.encP(text, 'uint8').then(function(res){
+  bsc.encP(text, Digest).then(function(res){
 
-      bsc.decP(res.ctext, res.key, 'uint8').then(function(dec){
+      bsc.decP(res.ctext, res.key, Digest).then(function(dec){
         test('promise', dec, text);
-        cl(digest + ' test complete.');
+        cl(Digest + ' test complete.');
       }).catch(function(err){
         ce('promise dec test failure.')
       })
@@ -62,10 +84,83 @@ function initTest(digest){
   }).catch(function(err){
     ce(err)
   })
-}
 
-let dtype = ['hex','binary','uint8','base64','bytes'];
 
-dtype.forEach(function(i){
-  initTest(i)
+
+// enc/dec hmac test
+
+bsc.hmac.gen(Hash, Digest, function(err, hkey){
+
+  // cl(hkey)
+
+  bsc.encHmac(text, hkey, Hash, Digest, function(err, res){
+    if(err){return ce(err)}
+    cl(res)
+    bsc.decHmac(res.ctext, res.key, res.hmac, hkey, Hash, Digest, function(err, dec){
+      if(err){return ce(err)}
+      cl(dec)
+    });
+  });
 })
+
+
+//hmac callback
+/*
+bsc.hmac.gen(Hash, Digest, function(err, key){
+  if(err){return ce(err)}
+  cl(key)
+  bsc.hmac.sign(key, text, Hash, Digest, function(err, sig){
+    if(err){return ce(err)}
+
+    bsc.hmac.verify(key, text, sig, Hash, Digest, function(err, isEqual){
+      if(err){return ce(err)}
+      test('hamc', isEqual, true);
+    })
+  })
+})
+*/
+
+
+/*
+//hmac promise
+bsc.hmac.genP(Hash, Digest)
+.then(function(key){
+  bsc.hmac.signP(key, text, Hash, Digest)
+  .then(function(sig){
+    cl(sig)
+    bsc.hmac.verifyP(key, text, sig, Hash, Digest)
+      .then(function(isEqual){
+        test('hamc', isEqual, true);
+      }).catch(function(err){
+        ce(err)
+      })
+  }).catch(function(err){
+    ce(err)
+  })
+}).catch(function(err){
+  ce(err)
+})
+*/
+
+
+
+
+// enc/dec hmac promise test
+/*
+bsc.hmac.gen(Hash, Digest, function(err, hkey){
+
+  // cl(hkey)
+
+  bsc.encHmacP(text, hkey, Hash, Digest)
+  .then(function(res){
+    bsc.decHmacP(res.ctext, res.key, res.hmac, hkey, Hash, Digest)
+    .then(function(dec){
+      cl(dec)
+    }).catch(function(err){
+      ce(err)
+    })
+  }).catch(function(err){
+    ce(err)
+  })
+})
+*/

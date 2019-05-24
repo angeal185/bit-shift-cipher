@@ -1,6 +1,6 @@
 # bit-shift-cipher
 
-bit-shift vernam cipher
+bit-shift vernam cipher for nodejs and the browser
 
 the cipher cannot be cracked assuming the following:
 * The key is used only once
@@ -35,10 +35,21 @@ git
 $ git clone git@github.com:angeal185/bit-shift-cipher.git
 ```
 
+
+#### nodejs
+
+```js
+
+const bitShift = require('bit-shift-cipher');
+
+```
+
 #### browser
 
 ```html
+
 <script src="./dist/bitshift.min.js"></script>
+
 ```
 
 
@@ -270,6 +281,9 @@ bsc.utils.isArray(i) // check array
 bsc.utils.isString(i) // check string
 bsc.utils.isEqual(a,b)  // check if equal
 
+bsc.utils.padIt(uint8Array, byteArray)  // add random padding to Uint8Array ~ [1,2]
+bsc.utils.unPad(uint8Array, byteArray)  // remove padding from Uint8Array ~ [1,2]
+
 /* demo */
 
 const conf = {
@@ -279,7 +293,7 @@ const conf = {
 },
 bsc = new bitShift(conf),
 utils = bsc.utils,
-Digest = 'bytes',
+Digest = 'hex',
 Hash = '256',
 cl = console.log,
 ce = console.error;
