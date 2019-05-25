@@ -1,0 +1,22 @@
+{
+  "name": "bit-shift-cipher",
+  "description": "bit-shift vernam cipher for nodejs and the browser",
+  "main": "./dist/bitshift.js",
+  "authors": [
+    "ben eaves"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "cipher",
+    "vernam-cipher",
+    "encryption",
+    "decryption",
+    "algorithm"
+  ],
+  "homepage": "https://github.com/angeal185/bit-shift-cipher",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ]
+}
